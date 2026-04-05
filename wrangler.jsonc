@@ -7,7 +7,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "jeongmat",
+      "database_name": "jeongmat-db",
       "database_id": "13babce6-b681-453e-b5e7-e3f891a82b3b"
     }
   ]
