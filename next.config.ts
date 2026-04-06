@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
-// Initialize Cloudflare bindings (D1, KV, etc.) for local `next dev`
-initOpenNextCloudflareForDev();
+// Only run in local dev — GitHub Actions sets CI=true which disables this.
+// initOpenNextCloudflareForDev has its own check but workerd crashes in CI sandbox.
+if (!process.env.CI) {
+  initOpenNextCloudflareForDev();
+}
 
 const nextConfig: NextConfig = {
   images: {
