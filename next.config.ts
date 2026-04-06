@@ -5,8 +5,6 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
-  // Required for Cloudflare Pages deployment via OpenNext
-  output: "standalone",
   images: {
     unoptimized: true,
   },
