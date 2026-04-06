@@ -2,7 +2,6 @@
   "name": "jeongmat",
   "compatibility_date": "2024-12-18",
   "compatibility_flags": ["nodejs_compat"],
-  "account_id": "adc08b064010718c8f4b50368ff86314",
   "pages_build_output_dir": ".open-next/assets",
   "d1_databases": [
     {
