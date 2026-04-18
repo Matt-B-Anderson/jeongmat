@@ -78,6 +78,21 @@ export default function NewBatchPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState<FormData>(defaultForm);
+  const [tempUnit, setTempUnit] = useState<"C" | "F">("C");
+
+  // Display value in the selected unit; stored value is always °C
+  const tempDisplayValue =
+    tempUnit === "F" && form.ambient_temp_c
+      ? String(Math.round(parseFloat(form.ambient_temp_c) * 9 / 5 + 32))
+      : form.ambient_temp_c;
+
+  const handleTempChange = (raw: string) => {
+    if (!raw) { set("ambient_temp_c", ""); return; }
+    const num = parseFloat(raw);
+    if (isNaN(num)) return;
+    const celsius = tempUnit === "F" ? ((num - 32) * 5) / 9 : num;
+    set("ambient_temp_c", String(Math.round(celsius * 10) / 10));
+  };
 
   const set = (field: keyof FormData, value: string | boolean) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -201,22 +216,38 @@ export default function NewBatchPage() {
               />
             </Field>
             <Field
-              label="Ambient Temp (°C)"
+              label={`Ambient Temp (°${tempUnit})`}
               required
               hint="Temperature where kimchi will ferment"
             >
-              <div className="relative">
+              <div className="flex gap-2">
                 <input
                   type="number"
-                  value={form.ambient_temp_c}
-                  onChange={(e) => set("ambient_temp_c", e.target.value)}
+                  value={tempDisplayValue}
+                  onChange={(e) => handleTempChange(e.target.value)}
                   required
-                  min={10}
-                  max={35}
-                  step={0.5}
+                  min={tempUnit === "F" ? 50 : 10}
+                  max={tempUnit === "F" ? 95 : 35}
+                  step={tempUnit === "F" ? 1 : 0.5}
+                  placeholder={tempUnit === "F" ? "e.g. 65" : "e.g. 18"}
                   className={inputClass}
                 />
+                <button
+                  type="button"
+                  onClick={() => setTempUnit((u) => (u === "C" ? "F" : "C"))}
+                  className="flex-shrink-0 px-3 py-2 rounded-lg border border-border text-sm font-medium text-text-muted hover:border-primary hover:text-primary transition-colors bg-white"
+                  title="Toggle between Celsius and Fahrenheit"
+                >
+                  °{tempUnit === "C" ? "F" : "C"}
+                </button>
               </div>
+              {form.ambient_temp_c && (
+                <p className="text-xs text-text-muted mt-1">
+                  {tempUnit === "F"
+                    ? `${form.ambient_temp_c}°C stored`
+                    : `${Math.round(parseFloat(form.ambient_temp_c) * 9 / 5 + 32)}°F`}
+                </p>
+              )}
             </Field>
           </div>
         </Section>

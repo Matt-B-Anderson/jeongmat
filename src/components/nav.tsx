@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { LayoutDashboard, PlusCircle, HelpCircle, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -28,6 +28,8 @@ const navItems = [
 export function Nav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user } = useUser();
+  const displayName = user?.firstName ?? user?.username ?? user?.emailAddresses[0]?.emailAddress?.split("@")[0] ?? null;
 
   return (
     <header className="bg-bg-card border-b border-border sticky top-0 z-40">
@@ -64,14 +66,21 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <UserButton
-              appearance={{
-                variables: { colorPrimary: "#1B4332" },
-                elements: {
-                  avatarBox: "w-8 h-8",
-                },
-              }}
-            />
+            <div className="flex items-center gap-2">
+              {displayName && (
+                <span className="text-sm text-text-muted hidden sm:block">
+                  {displayName}
+                </span>
+              )}
+              <UserButton
+                appearance={{
+                  variables: { colorPrimary: "#1B4332" },
+                  elements: {
+                    avatarBox: "w-8 h-8",
+                  },
+                }}
+              />
+            </div>
             {/* Mobile menu toggle */}
             <button
               className="md:hidden p-1.5 text-text-muted hover:text-text rounded-md"
