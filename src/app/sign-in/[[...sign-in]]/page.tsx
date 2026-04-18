@@ -12,6 +12,7 @@ export default function SignInPage() {
       </div>
 
       <SignIn
+        forceRedirectUrl="/dashboard"
         appearance={{
           variables: {
             colorPrimary: "#1B4332",

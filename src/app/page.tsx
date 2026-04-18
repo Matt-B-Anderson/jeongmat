@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 import {
   FlaskConical,
   Thermometer,
@@ -8,7 +9,10 @@ import {
   Leaf,
 } from "lucide-react";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { userId } = await auth();
+  const isSignedIn = !!userId;
+
   return (
     <div className="flex flex-col min-h-screen bg-bg">
       {/* Header */}
@@ -23,18 +27,29 @@ export default function LandingPage() {
             </span>
           </div>
           <nav className="flex items-center gap-4">
-            <Link
-              href="/sign-in"
-              className="text-sm text-text-muted hover:text-text transition-colors px-3 py-1.5"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/sign-up"
-              className="text-sm bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition-colors font-medium"
-            >
-              Start Tracking
-            </Link>
+            {isSignedIn ? (
+              <Link
+                href="/dashboard"
+                className="text-sm bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition-colors font-medium"
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/sign-in"
+                  className="text-sm text-text-muted hover:text-text transition-colors px-3 py-1.5"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="text-sm bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition-colors font-medium"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -60,19 +75,31 @@ export default function LandingPage() {
                 family&apos;s tradition forward.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/sign-up"
-                  className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-hover transition-colors text-base"
-                >
-                  Start your first batch
-                  <ChevronRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/sign-in"
-                  className="inline-flex items-center justify-center gap-2 bg-white border border-border text-text px-6 py-3 rounded-lg font-medium hover:border-primary transition-colors text-base"
-                >
-                  Sign in
-                </Link>
+                {isSignedIn ? (
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-hover transition-colors text-base"
+                  >
+                    Go to your dashboard
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href="/sign-up"
+                      className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-hover transition-colors text-base"
+                    >
+                      Create free account
+                      <ChevronRight className="w-4 h-4" />
+                    </Link>
+                    <Link
+                      href="/sign-in"
+                      className="inline-flex items-center justify-center gap-2 bg-white border border-border text-text px-6 py-3 rounded-lg font-medium hover:border-primary transition-colors text-base"
+                    >
+                      Sign in
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -225,13 +252,23 @@ export default function LandingPage() {
             <p className="text-white/70 text-lg mb-8">
               Free to use. No credit card required. Start tracking today.
             </p>
-            <Link
-              href="/sign-up"
-              className="inline-flex items-center gap-2 bg-white text-primary font-medium px-8 py-3.5 rounded-lg hover:bg-bg transition-colors text-base"
-            >
-              Create your account
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+            {isSignedIn ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 bg-white text-primary font-medium px-8 py-3.5 rounded-lg hover:bg-bg transition-colors text-base"
+              >
+                Go to your dashboard
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            ) : (
+              <Link
+                href="/sign-up"
+                className="inline-flex items-center gap-2 bg-white text-primary font-medium px-8 py-3.5 rounded-lg hover:bg-bg transition-colors text-base"
+              >
+                Create your account
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            )}
           </div>
         </section>
       </main>
