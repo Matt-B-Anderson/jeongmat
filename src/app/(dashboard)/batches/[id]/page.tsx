@@ -112,7 +112,7 @@ export default async function BatchDetailPage({ params }: Props) {
             <QuickStat
               icon={<Thermometer className="w-4 h-4" />}
               label="Temperature"
-              value={`${batch.ambient_temp_c}°C`}
+              value={`${batch.ambient_temp_c}°C / ${Math.round(batch.ambient_temp_c * 9 / 5 + 32)}°F`}
             />
             <QuickStat
               icon={<Clock className="w-4 h-4" />}
